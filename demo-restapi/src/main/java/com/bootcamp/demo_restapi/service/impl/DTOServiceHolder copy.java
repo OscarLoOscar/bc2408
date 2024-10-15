@@ -51,28 +51,29 @@ public class DTOServiceHolder implements DTOService {
 
     List<UserPostCommentDTO> userPostCommentDTO = new ArrayList<>();
 
-
-    userlists.forEach(user -> {
+    // Approach 2
+    for (int i = 0; i < userlists.size(); i++) {
       List<UserPostCommentDTO.PostDTO> userPosts = new ArrayList<>();
-      postlists.forEach(post -> {
-        if (post.getUserId().equals(user.getId())) {
+      for (int j = 0; j < postlists.size(); j++) {
+        if (postlists.get(j).getUserId().equals(userlists.get(i).getId())) {
           List<UserPostCommentDTO.CommentDTO> postsComments = new ArrayList<>();
-          commentlists.forEach(comment -> {
-            if (comment.getId().equals(post.getId())) {
+          for (int k = 0; k < commentlists.size(); k++) {
+            if (commentlists.get(k).getId().equals(postlists.get(j).getId())) {
               UserPostCommentDTO.CommentDTO commentDTO =
-                  mapper.mapToDTO(comment);
+                  mapper.mapToDTO(commentlists.get(k));
               postsComments.add(commentDTO);
             }
-          });
-          UserPostCommentDTO.PostDTO postDTO = mapper.mapToDTO(post);
+          } ;
+          UserPostCommentDTO.PostDTO postDTO =
+              mapper.mapToDTO(postlists.get(j));
           postDTO.setCommentDTO(postsComments);
           userPosts.add(postDTO);
         }
-      });
-      UserPostCommentDTO userDto = mapper.mapToDTO(user);
+      } ;
+      UserPostCommentDTO userDto = mapper.mapToDTO(userlists.get(i));
       userDto.setPostDTO(userPosts);
       userPostCommentDTO.add(userDto);
-    });
+    } ;
     return userPostCommentDTO;
   };
 
